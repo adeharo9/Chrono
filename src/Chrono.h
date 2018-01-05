@@ -49,7 +49,7 @@ public:
 
 	inline void stop (uint id)
 	{
-		static const timepoint time = std::chrono::high_resolution_clock::now();
+		timepoint time = std::chrono::high_resolution_clock::now();
 
 		if (time < startTime.at(id)) throw std::logic_error("Start function must be invoked first.");
 		if (stopTime.at(id) != Chrono::MAX_TIME) throw std::logic_error("Stop can only be called once per ID.");
