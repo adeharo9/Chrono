@@ -13,7 +13,7 @@ class Chrono
 {
 private:
 
-	static constexpr timepoint MAX_TIME = timepoint::max();
+	const timepoint MAX_TIME = timepoint::max();
 
 	unordered_map <uint, timepoint> startTime;
 	unordered_map <uint, timepoint> stopTime;
@@ -71,8 +71,6 @@ public:
 		interval.erase(id);
 	}
 };
-
-constexpr timepoint Chrono::MAX_TIME;
 
 
 #endif	// CHRONO_H
