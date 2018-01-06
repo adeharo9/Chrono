@@ -60,7 +60,7 @@ public:
 		this -> interval.at(id) = (std::chrono::duration<ldouble>(stopTime.at(id) - startTime.at(id))).count();
 	}
 
-	inline void erase (uint id)
+	inline void reset (uint id)
 	{
 		if (startTime.find(id) == startTime.end()) throw std::logic_error("This ID does not exist");
 		if (stopTime.find(id) == stopTime.end()) throw std::logic_error("This ID does not exist");
