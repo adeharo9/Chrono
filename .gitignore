@@ -30,3 +30,13 @@
 *.exe
 *.out
 *.app
+bin
+
+# Testing
+*.cpp
+
+# CLion specifics
+.idea
+cmake-build-debug
+CMakeLists.txt
+Makefile
