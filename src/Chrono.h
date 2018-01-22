@@ -156,8 +156,6 @@ private:
 	{
 		public:
 
-			virtual AbstractStorage<T>* getCopy() const = 0;
-
 			/* MODIFIER METHODS */
 
 			virtual void push(T t) = 0;
@@ -169,6 +167,8 @@ private:
 			/* CONSULTING METHODS */
 
 			virtual bool empty() = 0;
+
+			virtual AbstractStorage<T>* getCopy() const = 0;
 	};
 
 	template <class T = uint> class Storage : public AbstractStorage <T>
@@ -182,11 +182,6 @@ private:
 			AbstractStorage<T>* storage = new StackStorage <T>();
 
 		public:
-
-			AbstractStorage<T>* getCopy() const override
-			{
-				return new Storage(*this);
-			}
 
 			/* CONSTRUCTION METHODS */
 
@@ -218,6 +213,7 @@ private:
 			{
 				this -> usageMode = storage.usageMode;
 				this -> storedSet = storage.storedSet;
+				delete this -> storage;
 
 				if(storage.storage != nullptr)
 				{
@@ -233,6 +229,7 @@ private:
 			{
 				this -> usageMode = storage.usageMode;
 				this -> storedSet = storage.storedSet;
+				delete this -> storage;
 
 				if(storage.storage != nullptr)
 				{
@@ -299,6 +296,11 @@ private:
 			{
 				return storedSet.find(t) != storedSet.end();
 			}
+
+			AbstractStorage<T>* getCopy() const override
+			{
+				return new Storage(*this);
+			}
 	};
 
 	template <class T = uint> class QueueStorage : public  AbstractStorage <T>
@@ -309,17 +311,9 @@ private:
 
 		public:
 
-			AbstractStorage<T>* getCopy() const override
-			{
-				return new QueueStorage(*this);
-			}
-
 			QueueStorage() = default;
 
-			QueueStorage(const QueueStorage& storage)
-			{
-				this -> queueStorage = storage.queueStorage;
-			}
+			QueueStorage(const QueueStorage& storage) = default;
 
 			/* MODIFIER METHODS */
 
@@ -344,6 +338,11 @@ private:
 			{
 				return queueStorage.empty();
 			}
+
+			AbstractStorage<T>* getCopy() const override
+			{
+				return new QueueStorage(*this);
+			}
 	};
 
 	template <class T = uint> class StackStorage : public AbstractStorage <T>
@@ -354,17 +353,9 @@ private:
 
 		public:
 
-			AbstractStorage<T>* getCopy() const override
-			{
-				return new StackStorage(*this);
-			}
-
 			StackStorage() = default;
 
-			StackStorage(const StackStorage& storage)
-			{
-				this -> stackStorage = storage.stackStorage;
-			}
+			StackStorage(const StackStorage& storage) = default;
 
 			/* MODIFIER METHODS */
 
@@ -388,6 +379,11 @@ private:
 			inline bool empty() override
 			{
 				return stackStorage.empty();
+			}
+
+			AbstractStorage<T>* getCopy() const override
+			{
+				return new StackStorage(*this);
 			}
 	};
 
