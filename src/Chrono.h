@@ -11,6 +11,7 @@
 class Chrono
 {
 private:
+
 	/* CLASS TYPEDEFS */
 
 	typedef unsigned int uint;
@@ -28,7 +29,7 @@ public:
 		AS_STACK,
 	};
 
-	/* CONSTRUCTORS */
+	/* CONSTRUCTION METHODS */
 
 	inline Chrono() = default;
 
@@ -38,7 +39,7 @@ public:
 		{
 			case MANUAL:
 			case AS_QUEUE:
-				usedIDs = Storage<>(mode);
+				usedIDs = Storage<uint>(mode);
 				break;
 
 			case AS_STACK:
@@ -51,7 +52,7 @@ public:
 
 	inline Chrono(const Chrono& chrono) = default;
 
-	/* DESTRUCTORS */
+	/* DESTRUCTION METHODS */
 
 	inline ~Chrono() = default;
 
@@ -160,231 +161,236 @@ private:
 
 			virtual void push(T t) = 0;
 
-			virtual T first() = 0;
+			virtual T first() const = 0;
 
 			virtual void pop() = 0;
 
 			/* CONSULTING METHODS */
 
-			virtual bool empty() = 0;
+			virtual bool empty() const = 0;
 
 			virtual AbstractStorage<T>* getCopy() const = 0;
 	};
 
 	template <class T = uint> class Storage : public AbstractStorage <T>
 	{
-		private:
+	private:
 
-			UsageMode usageMode = AS_STACK;
+		UsageMode usageMode = AS_STACK;
 
-			std::unordered_set <T> storedSet;
+		std::unordered_set <T> storedSet;
 
-			AbstractStorage<T>* storage = new StackStorage <T>();
+		AbstractStorage<T>* storage = new StackStorage <T>();
 
-		public:
+	public:
 
-			/* CONSTRUCTION METHODS */
+		/* CONSTRUCTION METHODS */
 
-			inline Storage() = default;
+		inline Storage() = default;
 
-			inline explicit Storage(UsageMode mode) : usageMode(mode)
+		inline explicit Storage(UsageMode mode) : usageMode(mode)
+		{
+			switch (mode)
 			{
-				switch (mode)
-				{
-					case MANUAL:
-						delete storage;
-						storage = nullptr;
-						break;
+				case MANUAL:
+					delete storage;
+					storage = nullptr;
+					break;
 
-					case AS_QUEUE:
-						delete storage;
-						storage = new QueueStorage <T>();
-						break;
+				case AS_QUEUE:
+					delete storage;
+					storage = new QueueStorage <T>();
+					break;
 
-					case AS_STACK:
-						break;
+				case AS_STACK:
+					break;
 
-					default:
-						throw std::invalid_argument("Mode not yet implemented.");
-				}
+				default:
+					throw std::invalid_argument("Mode not yet implemented.");
+			}
+		}
+
+		inline Storage(const Storage& storage) : usageMode(storage.usageMode), storedSet(storage.storedSet)
+		{
+			delete this -> storage;
+
+			if(storage.storage != nullptr)
+			{
+				this -> storage = storage.storage -> getCopy();
+			}
+			else
+			{
+				this -> storage = nullptr;
+			}
+		}
+
+		/* DESTRUCTION METHODS */
+
+		inline ~Storage()
+		{
+			delete storage;
+		}
+
+		/* OVERLOADED OPERATORS */
+
+		inline Storage& operator=(const Storage& storage)
+		{
+			this -> usageMode = storage.usageMode;
+			this -> storedSet = storage.storedSet;
+
+			delete this -> storage;
+
+			if(storage.storage != nullptr)
+			{
+				this -> storage = storage.storage -> getCopy();
+			}
+			else
+			{
+				this -> storage = nullptr;
+			}
+		}
+
+		/* MODIFIER METHODS */
+
+		inline void insert(T t)
+		{
+			storedSet.insert(t);
+		}
+
+		inline void push(T t) override
+		{
+			if(storage != nullptr)
+			{
+				storage -> push(t);
 			}
 
-			inline Storage(const Storage& storage)
-			{
-				this -> usageMode = storage.usageMode;
-				this -> storedSet = storage.storedSet;
-				delete this -> storage;
+			insert(t);
+		}
 
-				if(storage.storage != nullptr)
-				{
-					this -> storage = storage.storage -> getCopy();
-				}
-				else
-				{
-					this -> storage = nullptr;
-				}
-			}
+		inline void pop() override
+		{
+			if(usageMode == MANUAL) throw std::logic_error("Automatic assignation/retrieval methods cannot be accessed in MANUAL execution mode.");
 
-			inline Storage& operator=(const Storage& storage)
-			{
-				this -> usageMode = storage.usageMode;
-				this -> storedSet = storage.storedSet;
-				delete this -> storage;
+			erase(this -> first());
+			storage -> pop();
+		}
 
-				if(storage.storage != nullptr)
-				{
-					this -> storage = storage.storage -> getCopy();
-				}
-				else
-				{
-					this -> storage = nullptr;
-				}
-			}
+		inline void erase(T t)
+		{
+			storedSet.erase(t);
+		}
 
-			/* DESTRUCTION METHODS */
+		/* CONSULTING METHODS */
 
-			inline ~Storage()
-			{
-				delete storage;
-			}
+		inline T first() const override
+		{
+			if(usageMode == MANUAL) throw std::logic_error("Automatic assignation/retrieval methods cannot be accessed in MANUAL execution mode.");
 
-			/* MODIFIER METHODS */
+			return storage -> first();
+		}
 
-			inline void insert(T t)
-			{
-				storedSet.insert(t);
-			}
+		inline bool empty() const override
+		{
+			return storedSet.empty();
+		}
 
-			inline void push(T t) override
-			{
-				if(storage != nullptr)
-				{
-					storage -> push(t);
-				}
+		inline bool stored(T t) const
+		{
+			return storedSet.find(t) != storedSet.end();
+		}
 
-				insert(t);
-			}
-
-			inline T first() override
-			{
-				if(usageMode == MANUAL) throw std::logic_error("Automatic assignation/retrieval methods cannot be accessed in MANUAL execution mode.");
-
-				return storage -> first();
-			}
-
-			inline void pop() override
-			{
-				if(usageMode == MANUAL) throw std::logic_error("Automatic assignation/retrieval methods cannot be accessed in MANUAL execution mode.");
-
-				erase(this -> first());
-				storage -> pop();
-			}
-
-			inline void erase(T t)
-			{
-				storedSet.erase(t);
-			}
-
-			/* CONSULTING METHODS */
-
-			inline bool empty() override
-			{
-				return storedSet.empty();
-			}
-
-			inline bool stored(T t)
-			{
-				return storedSet.find(t) != storedSet.end();
-			}
-
-			AbstractStorage<T>* getCopy() const override
-			{
-				return new Storage(*this);
-			}
+		AbstractStorage<T>* getCopy() const override
+		{
+			return new Storage(*this);
+		}
 	};
 
 	template <class T = uint> class QueueStorage : public  AbstractStorage <T>
 	{
-		private:
+	private:
 
-			std::queue <T> queueStorage;
+		std::queue <T> queueStorage;
 
-		public:
+	public:
 
-			QueueStorage() = default;
+		/* CONSTRUCTION METHODS */
 
-			QueueStorage(const QueueStorage& storage) = default;
+		QueueStorage() = default;
 
-			/* MODIFIER METHODS */
+		QueueStorage(const QueueStorage& storage) = default;
 
-			inline void push(T t) override
-			{
-				queueStorage.push(t);
-			}
+		/* MODIFIER METHODS */
 
-			inline T first() override
-			{
-				return queueStorage.front();
-			}
+		inline void push(T t) override
+		{
+			queueStorage.push(t);
+		}
 
-			inline void pop() override
-			{
-				queueStorage.pop();
-			}
+		inline void pop() override
+		{
+			queueStorage.pop();
+		}
 
-			/* CONSULTING METHODS */
+		/* CONSULTING METHODS */
 
-			inline bool empty() override
-			{
-				return queueStorage.empty();
-			}
+		inline T first() const override
+		{
+			return queueStorage.front();
+		}
 
-			AbstractStorage<T>* getCopy() const override
-			{
-				return new QueueStorage(*this);
-			}
+		inline bool empty() const override
+		{
+			return queueStorage.empty();
+		}
+
+		AbstractStorage<T>* getCopy() const override
+		{
+			return new QueueStorage(*this);
+		}
 	};
 
 	template <class T = uint> class StackStorage : public AbstractStorage <T>
 	{
-		private:
+	private:
 
-			std::stack <T> stackStorage;
+		std::stack <T> stackStorage;
 
-		public:
+	public:
 
-			StackStorage() = default;
+		/* CONSTRUCTION METHODS */
 
-			StackStorage(const StackStorage& storage) = default;
+		StackStorage() = default;
 
-			/* MODIFIER METHODS */
+		StackStorage(const StackStorage& storage) = default;
 
-			inline void push(T t) override
-			{
-				stackStorage.push(t);
-			}
+		/* MODIFIER METHODS */
 
-			inline T first() override
-			{
-				return stackStorage.top();
-			}
+		inline void push(T t) override
+		{
+			stackStorage.push(t);
+		}
 
-			inline void pop() override
-			{
-				stackStorage.pop();
-			}
+		inline void pop() override
+		{
+			stackStorage.pop();
+		}
 
-			/* CONSULTING METHODS */
+		/* CONSULTING METHODS */
 
-			inline bool empty() override
-			{
-				return stackStorage.empty();
-			}
+		inline T first() const override
+		{
+			return stackStorage.top();
+		}
 
-			AbstractStorage<T>* getCopy() const override
-			{
-				return new StackStorage(*this);
-			}
+		inline bool empty() const override
+		{
+			return stackStorage.empty();
+		}
+
+		AbstractStorage<T>* getCopy() const override
+		{
+			return new StackStorage(*this);
+		}
 	};
 
 	/* PRIVATE ATTRIBUTES */
