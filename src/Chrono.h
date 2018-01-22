@@ -26,7 +26,36 @@ public:
 	{
 		MANUAL,
 		AS_QUEUE,
-		AS_STACK,
+		AS_STACK
+	};
+
+	class UsageModeTranslation
+	{
+	public:
+		static string getStrDescriptor(UsageMode usageMode)
+		{
+			string usageModeString;
+
+			switch (usageMode)
+			{
+				case MANUAL:
+					usageModeString = "MANUAL";
+					break;
+
+				case AS_QUEUE:
+					usageModeString = "AS_QUEUE";
+					break;
+
+				case AS_STACK:
+					usageModeString = "AS_STACK";
+					break;
+
+				default:
+					throw std::invalid_argument("Mode not yet implemented.");
+			}
+
+			return usageModeString;
+		}
 	};
 
 	/* CONSTRUCTION METHODS */
