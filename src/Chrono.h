@@ -156,6 +156,8 @@ private:
 	{
 		public:
 
+			virtual AbstractStorage<T>* getCopy() const = 0;
+
 			/* MODIFIER METHODS */
 
 			virtual void push(T t) = 0;
@@ -181,6 +183,11 @@ private:
 
 		public:
 
+			AbstractStorage<T>* getCopy() const override
+			{
+				return new Storage(*this);
+			}
+
 			/* CONSTRUCTION METHODS */
 
 			inline Storage() = default;
@@ -204,6 +211,36 @@ private:
 
 					default:
 						throw std::invalid_argument("Mode not yet implemented.");
+				}
+			}
+
+			inline Storage(const Storage& storage)
+			{
+				this -> usageMode = storage.usageMode;
+				this -> storedSet = storage.storedSet;
+
+				if(storage.storage != nullptr)
+				{
+					this -> storage = storage.storage -> getCopy();
+				}
+				else
+				{
+					this -> storage = nullptr;
+				}
+			}
+
+			inline Storage& operator=(const Storage& storage)
+			{
+				this -> usageMode = storage.usageMode;
+				this -> storedSet = storage.storedSet;
+
+				if(storage.storage != nullptr)
+				{
+					this -> storage = storage.storage -> getCopy();
+				}
+				else
+				{
+					this -> storage = nullptr;
 				}
 			}
 
@@ -272,6 +309,18 @@ private:
 
 		public:
 
+			AbstractStorage<T>* getCopy() const override
+			{
+				return new QueueStorage(*this);
+			}
+
+			QueueStorage() = default;
+
+			QueueStorage(const QueueStorage& storage)
+			{
+				this -> queueStorage = storage.queueStorage;
+			}
+
 			/* MODIFIER METHODS */
 
 			inline void push(T t) override
@@ -304,6 +353,18 @@ private:
 			std::stack <T> stackStorage;
 
 		public:
+
+			AbstractStorage<T>* getCopy() const override
+			{
+				return new StackStorage(*this);
+			}
+
+			StackStorage() = default;
+
+			StackStorage(const StackStorage& storage)
+			{
+				this -> stackStorage = storage.stackStorage;
+			}
 
 			/* MODIFIER METHODS */
 
