@@ -1,12 +1,57 @@
-all: TestMain.exe
+# DIRECTORIES
+SRC_DIR = ./src
+TST_DIR = ./test
+TST_CLASS_DIR = $(TST_DIR)/test-classes
 
-default: TestMain.exe
+# EXTENSIONS
+HDR_EXT = .h
+SRC_EXT = .cpp
+OBJ_EXT = .o
+EXE_EXT = .exe
 
-TestMain.exe: ./test/TestMain.cpp ./test/test-classes/Test.h ./test/test-classes/TestState.h ./test/test-classes/ModeTest.h ./test/test-classes/ModeTest.cpp ./src/Chrono.h
-	g++ -o TestMain.exe ./test/TestMain.cpp ./test/test-classes/Test.h ./test/test-classes/TestState.h ./test/test-classes/ModeTest.h ./test/test-classes/ModeTest.cpp ./src/Chrono.h --std=c++11
+# EXECUTABLES
+CP = g++
+RM = rm
+
+# FLAGS
+CP_OPTIONS = -o
+CP_FLAGS = --std=c++11
+
+RM_FLAGS = -rf
+
+# FILE PATHS
+EXE_FILE = TestMain$(EXE_EXT)
+
+HEADER_FILES = \
+	$(SRC_DIR)/Chrono$(HDR_EXT)
+
+TEST_HEADER_FILES = \
+	$(TST_CLASS_DIR)/Test$(HDR_EXT) \
+	$(TST_CLASS_DIR)/TestState$(HDR_EXT) \
+	$(TST_CLASS_DIR)/ModeTest$(HDR_EXT)
+
+TEST_SOURCE_FILES = \
+	$(TST_DIR)/TestMain$(SRC_EXT) \
+	$(TST_CLASS_DIR)/ModeTest$(SRC_EXT)
+
+ALL_FILES = \
+	$(HEADER_FILES) \
+	$(TEST_HEADER_FILES) \
+	$(TEST_SOURCE_FILES)
+
+# COMMANDS
+default: $(EXE_FILE)
+
+all: $(EXE_FILE)
+
+$(EXE_FILE): $(ALL_FILES)
+	$(CP) $(CP_OPTIONS) $(EXE_FILE) $(ALL_FILES) $(CP_FLAGS)
 
 clean:
-	rm -rf *.o
-	rm -rf ./src/*.o
-	rm -rf ./test/*.o
-	rm -rf *.exe
+	$(RM) $(RM_FLAGS) *$(OBJ_EXT)
+	$(RM) $(RM_FLAGS) $(SRC_DIR)/*$(OBJ_EXT)
+	$(RM) $(RM_FLAGS) $(TST_DIR)/*$(OBJ_EXT)
+	$(RM) $(RM_FLAGS) $(TST_CLASS_DIR)/*$(OBJ_EXT)
+	$(RM) $(RM_FLAGS) *$(EXE_EXT)
+
+.PHONY: clean
