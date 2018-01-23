@@ -222,9 +222,9 @@ private:
 
 		UsageMode usageMode = AS_STACK;
 
-		std::unordered_set <T> storedSet;
+		std::unordered_set<T> storedSet;
 
-		AbstractStorage<T>* storage = new StackStorage <T>();
+		AbstractStorage<T>* storage = new StackStorage<T>();
 
 	public:
 
