@@ -47,6 +47,8 @@ all: $(EXE_FILE)
 $(EXE_FILE): $(ALL_FILES)
 	$(CP) $(CP_OPTIONS) $(EXE_FILE) $(ALL_FILES) $(CP_FLAGS)
 
+tests: $(EXE_FILE)
+
 clean:
 	$(RM) $(RM_FLAGS) *$(OBJ_EXT)
 	$(RM) $(RM_FLAGS) $(SRC_DIR)/*$(OBJ_EXT)

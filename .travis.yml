@@ -1,5 +1,5 @@
 language: cpp
 compiler: gcc
 
-install: make
+install: make tests
 script: ./TestMain.exe
