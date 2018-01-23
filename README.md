@@ -5,7 +5,7 @@
 
 ## Where am I?
 
-Have you ever wondered how to know how **fast** your C++ code is ...
+Have you ever wondered how to know how **fast** your c++ code is ...
 
 - ... using only **std** functions ...
 - ... in a **single header** file ...
@@ -15,7 +15,7 @@ Have you ever wondered how to know how **fast** your C++ code is ...
 **_Wait no more!_**
 
 Because you have just landed on the _I-answer-all-your-questions_ repository of Chrono,
- a simple and plain C++ class that will cover all your needs. _And more!_
+ a simple and plain c++ class that will cover all your needs. _And more!_
  
 ## How do I use it?
 
