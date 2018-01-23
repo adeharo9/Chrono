@@ -85,6 +85,21 @@ public:
 
 	inline ~Chrono() = default;
 
+	/* OVERLOADED OPERATORS */
+
+	inline Chrono& operator=(const Chrono& chrono1)
+	{
+		this -> firstAvailableID = chrono1.firstAvailableID;
+
+		this -> usageMode = chrono1.usageMode;
+
+		this -> usedIDs = chrono1.usedIDs;
+
+		this -> startTime = chrono1.startTime;
+		this -> stopTime = chrono1.stopTime;
+		this -> interval = chrono1.interval;
+	}
+
 	/* GET METHODS */
 
 	inline ldouble duration (uint id) const
