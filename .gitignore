@@ -36,4 +36,3 @@ bin
 .idea
 cmake-build-debug
 CMakeLists.txt
-Makefile
