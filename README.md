@@ -30,13 +30,11 @@ Simply do the following:
 
 ## But I need more!
 
-You still need more from Chrono? Then ask for it!
+You still need more from Chrono?
 
-**_That's why we are here!_**
+_Then ask for it!_ **_That's why we are here!_**
 
-Simply open up an **issue** ...
-
-... write us an **email** at `a.deharo9@gmail.com` ...
-
-... or fork our code and start a new **pull request**! 
+- Simply open up an **issue** ...
+- ... write us an **email** at `a.deharo9@gmail.com` ...
+- ... or fork our code and start a new **pull request**! 
 
