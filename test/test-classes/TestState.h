@@ -27,7 +27,7 @@ class TestStateTranslation
 public:
 	static std::string getStrDescriptor(TestState testState)
 	{
-		string strTestState;
+		std::string strTestState;
 
 		switch (testState)
 		{

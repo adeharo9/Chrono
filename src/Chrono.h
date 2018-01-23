@@ -32,9 +32,9 @@ public:
 	class UsageModeTranslation
 	{
 	public:
-		static string getStrDescriptor(UsageMode usageMode)
+		static std::string getStrDescriptor(UsageMode usageMode)
 		{
-			string usageModeString;
+			std::string usageModeString;
 
 			switch (usageMode)
 			{
